@@ -41,4 +41,4 @@ class UserController:
             deleted_count = self.user_service.delete_user(user_id)
             return deleted_count
         except Exception as e:
-            raise Exception("Error deleting user: ", str(e)
+            raise Exception("Error deleting user: ", str(e))

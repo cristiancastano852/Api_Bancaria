@@ -10,6 +10,8 @@ class UserService:
     def get_user(self, user_id: str):
         try:
             user = conn.bancaria.users.find_one({"_id": ObjectId(user_id)})
+            if not user:
+                return Response(status_code=404, detail=f"User with id <{user_id}> no found")
             return userEntity(user)
         except Exception as e:
             raise Exception("Error getting user: ", str(e))
@@ -38,6 +40,8 @@ class UserService:
                                         "$set": updated_user_data})
             updated_user = conn.bancaria.users.find_one(
                 {"_id": ObjectId(user_id)})
+            if not updated_user:
+                return Response(status_code=404, detail=f"User with id <{user_id}> no found")
             return userEntity(updated_user)
         except Exception as e:
             raise Exception("Error updating user: ", str(e))
@@ -47,4 +51,4 @@ class UserService:
             result = conn.bancaria.users.delete_one({"_id": ObjectId(user_id)})
             return Response(status_code=HTTP_204_NO_CONTENT)
         except Exception as e:
-            raise Exception("Error deleting user: ", str(e)
+            raise Exception("Error deleting user: ", str(e))

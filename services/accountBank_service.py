@@ -17,16 +17,19 @@ class AccountBankService:
             return False
     
     def create_account(self, new_account_data: dict):
-        del new_account_data["id"]
-        user_id = new_account_data["user_id"]
-        if not self.is_valid_objectid(user_id):
-            raise HTTPException(status_code=404, detail=f"Usuario con el id <{user_id}> no encontrado")
-        user = conn.bancaria.users.find_one({"_id": ObjectId(user_id)})
-        if not user:
-            raise HTTPException(status_code=404, detail=f"Usuario con el id <{user_id}> no encontrado")
-        result = conn.bancaria.accounts.insert_one(new_account_data)
-        inserted_id = result.inserted_id
-        return {"id": str(inserted_id)}
+        try:
+            del new_account_data["id"]
+            user_id = new_account_data["user_id"]
+            if not self.is_valid_objectid(user_id):
+                raise HTTPException(status_code=404, detail=f"User with id <{user_id}> no found")
+            user = conn.bancaria.users.find_one({"_id": ObjectId(user_id)})
+            if not user:
+                raise HTTPException(status_code=404, detail=f"User with id <{user_id}> no found")
+            result = conn.bancaria.accounts.insert_one(new_account_data)
+            inserted_id = result.inserted_id
+            return {"id": str(inserted_id)}
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))
 
     def replace_balance(self, account_id: str, balance: float):
         """
@@ -42,15 +45,18 @@ class AccountBankService:
         Raises:
             HTTPException: If the account with the specified account_id is not found.
         """
-        update_data = {
-            "balance": balance,
-            "updated_at": datetime.now()  # Update the updated_at field
-        }
-        conn.bancaria.accounts.update_one({"_id": ObjectId(account_id)}, {
-                                          "$set": update_data})
-        updated_account = conn.bancaria.accounts.find_one(
-            {"_id": ObjectId(account_id)})
-        return accountEntity(updated_account)
+        try:
+            update_data = {
+                "balance": balance,
+                "updated_at": datetime.now()  # Update the updated_at field
+            }
+            conn.bancaria.accounts.update_one({"_id": ObjectId(account_id)}, {
+                                            "$set": update_data})
+            updated_account = conn.bancaria.accounts.find_one(
+                {"_id": ObjectId(account_id)})
+            return accountEntity(updated_account)
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))
 
     def update_balance(self, account_id: str, balance_change: float):
         """
@@ -68,35 +74,49 @@ class AccountBankService:
         Raises:
             HTTPException: If the account with the specified account_id is not found.
         """
-        account = conn.bancaria.accounts.find_one(
-            {"_id": ObjectId(account_id)})
-        if account:
-            new_balance = account["balance"] + balance_change
-            update_data = {
-                "balance": new_balance,
-                "updated_at": datetime.now()
-            }
-            conn.bancaria.accounts.update_one(
-                {"_id": ObjectId(account_id)}, {"$set": update_data})
-            updated_account = conn.bancaria.accounts.find_one(
+        try:
+            account = conn.bancaria.accounts.find_one(
                 {"_id": ObjectId(account_id)})
-            return {"Saldo actualizado": accountEntity(updated_account)}
-        else:
-            raise HTTPException(status_code=404, detail="Cuenta no encontrada")
+            if account:
+                new_balance = account["balance"] + balance_change
+                update_data = {
+                    "balance": new_balance,
+                    "updated_at": datetime.now()
+                }
+                conn.bancaria.accounts.update_one(
+                    {"_id": ObjectId(account_id)}, {"$set": update_data})
+                updated_account = conn.bancaria.accounts.find_one(
+                    {"_id": ObjectId(account_id)})
+                return {"Saldo actualizado": accountEntity(updated_account)}
+            else:
+                raise HTTPException(status_code=404, detail="Account not found")
+        except Exception as e:
+            raise Exception("Error updating balance: ", str(e))
 
     def get_all_accounts(self):
         return accountsEntity(conn.bancaria.accounts.find())
 
     def get_account(self, account_id: str):
-        account = conn.bancaria.accounts.find_one(
-            {"_id": ObjectId(account_id)})
-        return accountEntity(account)
+        try:
+            account = conn.bancaria.accounts.find_one(
+                {"_id": ObjectId(account_id)})
+            if not account:
+                raise HTTPException(status_code=404, detail="Account not found")
+            return accountEntity(account)
+        except Exception as e:
+            raise Exception("Error getting account: ", str(e))
 
     def get_account_by_user(self, user_id: str):
-        accounts = conn.bancaria.accounts.find({"user_id": user_id})
-        return accountsEntity(accounts)
+        try:
+            accounts = conn.bancaria.accounts.find({"user_id": user_id})
+            return accountsEntity(accounts)
+        except Exception as e:
+            raise Exception("Error getting accounts: ", str(e))
 
     def delete_account(self, account_id: str):
-        result = conn.bancaria.accounts.delete_one(
-            {"_id": ObjectId(account_id)})
-        return Response(status_code=HTTP_204_NO_CONTENT)
+        try:
+            result = conn.bancaria.accounts.delete_one(
+                {"_id": ObjectId(account_id)})
+            return Response(status_code=HTTP_204_NO_CONTENT)
+        except Exception as e:
+            raise Exception("Error deleting account: ", str(e))
