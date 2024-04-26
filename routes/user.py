@@ -1,45 +1,30 @@
 from fastapi import APIRouter, Response, status
-from db.mongodb import conn
-from schemas.user import userEntity, usersEntity
+from controllers.user_controller import UserController
+from services.user_service import UserService
 from models.user import User
-from bson import ObjectId
-from starlette.status import HTTP_204_NO_CONTENT
+from db.mongodb import conn
 from typing import List
 
 user = APIRouter()
+user_service = UserService() 
+user_controller = UserController(user_service)
 
-
-@user.get("/users/{user_id}", response_model=User, tags=["users"])
+@user.get("/users/{user_id}", response_model=User, tags=["Users"])
 def get_user(user_id: str):
-    user = conn.bancaria.users.find_one({"_id": ObjectId(user_id)})
-    return userEntity(user)
+    return user_controller.get_user(user_id)
 
-
-@user.get('/users', response_model=List[User], tags=["users"])
+@user.get('/users', response_model=List[User], tags=["Users"])
 def get_all_users():
-    return usersEntity(conn.bancaria.users.find())
+    return user_controller.get_all_users()
 
-
-@user.post("/users", response_model=User, tags=["users"])
+@user.post("/users", response_model=User, tags=["Users"])
 def create_user(user: User):
-    new_user = dict(user)
-    del new_user["id"]
-    id = conn.bancaria.users.insert_one(new_user).inserted_id
-    user = conn.bancaria.users.find_one({"_id": id})
-    return userEntity(user)
+    return user_controller.create_user(user)
 
-
-@user.put("/users/{user_id}", response_model=User, tags=["users"])
+@user.put("/users/{user_id}", response_model=User, tags=["Users"])
 def update_user(user_id: str, user: User):
-    updated_user = dict(user)
-    del updated_user["id"]
-    conn.bancaria.users.find_one_and_update(
-        {"_id": ObjectId(user_id)}, {"$set": updated_user})
-    user = conn.bancaria.users.find_one({"_id": ObjectId(user_id)})
-    return userEntity(user)
+    return user_controller.update_user(user_id, user)
 
-
-@user.delete("/users/{user_id}", status_code=status.HTTP_204_NO_CONTENT, tags=["users"])
+@user.delete("/users/{user_id}", status_code=status.HTTP_204_NO_CONTENT, tags=["Users"])
 def delete_user(user_id: str):
-    conn.bancaria.users.find_one_and_delete({"_id": ObjectId(user_id)})
-    return Response(status_code=HTTP_204_NO_CONTENT)
+    return user_controller.delete_user(user_id)
