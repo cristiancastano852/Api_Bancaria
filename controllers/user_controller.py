@@ -8,22 +8,37 @@ class UserController:
         self.user_service = user_service
 
     def get_user(self, user_id: str) -> User:
-        user = self.user_service.get_user(user_id)
-        return user
+        try:
+            user = self.user_service.get_user(user_id)
+            return user
+        except Exception as e:
+            raise Exception("Error getting user: ", str(e))
 
     def get_all_users(self) -> List[User]:
-        users = self.user_service.get_all_users()
-        return users
+        try:
+            users = self.user_service.get_all_users()
+            return users
+        except Exception as e:
+            raise Exception("Error getting all users: ", str(e))
 
     def create_user(self, user_data: User) -> User:
-        new_user = dict(user_data)
-        created_user = self.user_service.create_user(new_user)
-        return created_user
+        try:
+            new_user = dict(user_data)
+            created_user = self.user_service.create_user(new_user)
+            return created_user
+        except Exception as e:
+            raise Exception("Error creating user: ", str(e))
 
     def update_user(self, user_id: str, user: User) -> User:
-        updated_user = self.user_service.update_user(user_id, user)
-        return updated_user
+        try:
+            updated_user = self.user_service.update_user(user_id, user)
+            return updated_user
+        except Exception as e:
+            raise Exception("Error updating user: ", str(e))
 
     def delete_user(self, user_id: str) -> int:
-        deleted_count = self.user_service.delete_user(user_id)
-        return deleted_count
+        try:
+            deleted_count = self.user_service.delete_user(user_id)
+            return deleted_count
+        except Exception as e:
+            raise Exception("Error deleting user: ", str(e)

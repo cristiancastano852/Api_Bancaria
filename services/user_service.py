@@ -8,26 +8,43 @@ from starlette.status import HTTP_204_NO_CONTENT
 
 class UserService:
     def get_user(self, user_id: str):
-        user = conn.bancaria.users.find_one({"_id": ObjectId(user_id)})
-        return userEntity(user)
+        try:
+            user = conn.bancaria.users.find_one({"_id": ObjectId(user_id)})
+            return userEntity(user)
+        except Exception as e:
+            raise Exception("Error getting user: ", str(e))
 
     def get_all_users(self):
-        return usersEntity(conn.bancaria.users.find())
+        try:
+            return usersEntity(conn.bancaria.users.find())
+        except Exception as e:
+            raise Exception("Error getting all users: ", str(e))
 
     def create_user(self, user: dict):
-        new_user_data = user
-        del new_user_data["id"]
-        result = conn.bancaria.users.insert_one(new_user_data)
-        new_user = conn.bancaria.users.find_one({"_id": result.inserted_id})
-        return userEntity(new_user)
+        try:
+            new_user_data = user
+            del new_user_data["id"]
+            result = conn.bancaria.users.insert_one(new_user_data)
+            new_user = conn.bancaria.users.find_one(
+                {"_id": result.inserted_id})
+            return userEntity(new_user)
+        except Exception as e:
+            raise Exception("Error creating user: ", str(e))
 
     def update_user(self, user_id: str, user: User):
-        updated_user_data = user.dict(exclude_unset=True)
-        conn.bancaria.users.update_one({"_id": ObjectId(user_id)}, {
-                                       "$set": updated_user_data})
-        updated_user = conn.bancaria.users.find_one({"_id": ObjectId(user_id)})
-        return userEntity(updated_user)
+        try:
+            updated_user_data = user.dict(exclude_unset=True)
+            conn.bancaria.users.update_one({"_id": ObjectId(user_id)}, {
+                                        "$set": updated_user_data})
+            updated_user = conn.bancaria.users.find_one(
+                {"_id": ObjectId(user_id)})
+            return userEntity(updated_user)
+        except Exception as e:
+            raise Exception("Error updating user: ", str(e))
 
     def delete_user(self, user_id: str):
-        result = conn.bancaria.users.delete_one({"_id": ObjectId(user_id)})
-        return Response(status_code=HTTP_204_NO_CONTENT)
+        try:
+            result = conn.bancaria.users.delete_one({"_id": ObjectId(user_id)})
+            return Response(status_code=HTTP_204_NO_CONTENT)
+        except Exception as e:
+            raise Exception("Error deleting user: ", str(e)
