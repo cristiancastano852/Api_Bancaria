@@ -3,9 +3,9 @@ from routes.user import user
 from routes.accountBank import accountBank
 
 app = FastAPI(
-    title="FastAPI MongoDB",
-    description="This is a simple example of FastAPI with MongoDB",
-    version="0.1.0",
+    title="API Bancaria",
+    description="API for bank account management.",
+    version="1.0.0",
     openapi_tags=[
         {
             "name": "Users",
@@ -20,4 +20,3 @@ app = FastAPI(
 
 app.include_router(user)
 app.include_router(accountBank)
-

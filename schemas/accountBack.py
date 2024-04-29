@@ -10,5 +10,6 @@ def accountEntity(item) -> dict:
         "updated_at": item["updated_at"].isoformat()
     }
 
+
 def accountsEntity(entity) -> list:
     return [accountEntity(item) for item in entity]
