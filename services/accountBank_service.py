@@ -42,7 +42,7 @@ class AccountBankService:
             user_id = new_account_data["user_id"]
             if not self.is_valid_objectid(user_id):
                 raise HTTPException(
-                    status_code=404, detail=f"User with id <{user_id}> no found")
+                    status_code=404, detail=f"User with id <{user_id}> no found, check the user_id")
             user = conn.bancaria.users.find_one({"_id": ObjectId(user_id)})
             if not user:
                 raise HTTPException(
@@ -79,8 +79,10 @@ class AccountBankService:
             updated_account = conn.bancaria.accounts.find_one(
                 {"_id": ObjectId(account_id)})
             return accountEntity(updated_account)
+        except HTTPException as e:
+            raise e
         except Exception as e:
-            raise HTTPException(status_code=500, detail=str(e))
+            raise Exception("Error updating account ", str(e))
 
     def update_balance(self, account_id: str, balance_change: float):
         """
@@ -115,8 +117,10 @@ class AccountBankService:
             else:
                 raise HTTPException(
                     status_code=404, detail="Account not found")
+        except HTTPException as e:
+            raise e
         except Exception as e:
-            raise Exception("Error updating balance: ", str(e))
+            raise Exception("Error updating account ", str(e))
 
     def get_all_accounts(self):
         return accountsEntity(conn.bancaria.accounts.find())
@@ -142,8 +146,10 @@ class AccountBankService:
                 raise HTTPException(
                     status_code=404, detail="Account not found")
             return accountEntity(account)
+        except HTTPException as e:
+            raise e
         except Exception as e:
-            raise Exception("Error getting account: ", str(e))
+            raise Exception("Error getting account", str(e))
 
     def get_account_by_user(self, user_id: str):
         """
@@ -159,10 +165,16 @@ class AccountBankService:
             Exception: If there is an error retrieving the accounts.
         """
         try:
+            user = conn.bancaria.users.find_one({"_id": ObjectId(user_id)})
+            if not user:
+                raise HTTPException(
+                    status_code=404, detail="The user does not exist")
             accounts = conn.bancaria.accounts.find({"user_id": user_id})
             return accountsEntity(accounts)
+        except HTTPException as e:
+            raise e
         except Exception as e:
-            raise Exception("Error getting accounts: ", str(e))
+            raise Exception("Error getting account", str(e))
 
     def delete_account(self, account_id: str):
         """

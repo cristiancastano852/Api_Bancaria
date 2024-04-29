@@ -1,7 +1,6 @@
 from services.user_service import UserService
 from models.user import User
 from typing import List
-from fastapi import HTTPException
 
 
 class UserController:
@@ -19,15 +18,9 @@ class UserController:
         - User: The user object representing the retrieved user.
 
         Raises:
-        - HTTPException: If the user is not found or an error occurs while retrieving the user.
         - Exception: If an unexpected error occurs.
-    """
-        try:
-            return self.user_service.get_user(user_id)
-        except HTTPException as http_error:
-            raise http_error
-        except Exception as e:
-            raise e
+        """
+        return self.user_service.get_user(user_id)
 
     def get_all_users(self) -> List[User]:
         """
@@ -39,11 +32,8 @@ class UserController:
         Raises:
         - Exception: If an error occurs while retrieving the users.
         """
-        try:
-            users = self.user_service.get_all_users()
-            return users
-        except Exception as e:
-            raise Exception("Error getting all users: ", str(e))
+        users = self.user_service.get_all_users()
+        return users
 
     def create_user(self, user_data: User) -> User:
         """
@@ -58,13 +48,9 @@ class UserController:
         Raises:
         - Exception: If an error occurs while creating the user.
         """
-        try:
-            new_user = dict(user_data)
-            created_user = self.user_service.create_user(new_user)
-            return created_user
-
-        except Exception as e:
-            raise Exception("Error creating user: ", str(e))
+        new_user = dict(user_data)
+        created_user = self.user_service.create_user(new_user)
+        return created_user
 
     def update_user(self, user_id: str, user: User) -> User:
         """
@@ -80,11 +66,8 @@ class UserController:
         Raises:
         - Exception: If an error occurs while updating the user.
         """
-        try:
-            updated_user = self.user_service.update_user(user_id, user)
-            return updated_user
-        except Exception as e:
-            raise Exception("Error updating user: ", str(e))
+        updated_user = self.user_service.update_user(user_id, user)
+        return updated_user
 
     def delete_user(self, user_id: str) -> int:
         """
@@ -99,8 +82,5 @@ class UserController:
         Raises:
         - Exception: If an error occurs while deleting the user.
         """
-        try:
-            deleted_count = self.user_service.delete_user(user_id)
-            return deleted_count
-        except Exception as e:
-            raise Exception("Error deleting user: ", str(e))
+        deleted_count = self.user_service.delete_user(user_id)
+        return deleted_count

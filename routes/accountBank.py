@@ -96,6 +96,8 @@ def replace_balance(account_id: str, balance: float):
     """
     try:
         return account_controller.replace_balance(account_id, balance)
+    except HTTPException as http_error:
+        raise http_error
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
@@ -119,6 +121,8 @@ def update_balance(account_id: str, amount: float):
     """
     try:
         return account_controller.update_balance(account_id, amount)
+    except HTTPException as http_error:
+        raise http_error
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
@@ -165,6 +169,8 @@ def get_account_by_user(user_id: str):
     """
     try:
         return account_controller.get_account_by_user(user_id)
+    except HTTPException as http_error:
+        raise http_error
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
