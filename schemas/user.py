@@ -4,8 +4,9 @@ def userEntity(item) -> dict:
         "username": item["username"],
         "name": item["name"],
         "email": item["email"],
-        "created_at": item["created_at"],
-        "updated_at": item["updated_at"],
+        "phone": item["phone"],
+        "created_at": item.get("created_at", None),
+        "updated_at": item.get("updated_at", None),
     }
 
 
