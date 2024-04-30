@@ -38,7 +38,11 @@ Entre otros endpoints que puede ser consultados en la documentación de la Api `
 1. Clona el repositorio desde GitHub.
 2. Asegúrate de tener Docker instalado en tu sistema.
 3. Ejecuta el comando `docker-compose up` en la raíz del proyecto para iniciar la aplicación.
-4. Accede a la API a través de los endpoints proporcionados.
+4. **Acceder a la API:** Una vez que la aplicación esté en funcionamiento, puedes acceder a la API a través de la siguiente URL en tu navegador web:
+   
+    [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
+   
+    Esto abrirá la interfaz interactiva de Swagger UI, donde puedes explorar y probar los diferentes endpoints de la API.
 
 ## Pruebas Unitarias
 
