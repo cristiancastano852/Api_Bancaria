@@ -30,6 +30,7 @@ Entre otros endpoints que puede ser consultados en la documentación de la Api `
 - **FastAPI:** Utilizado para crear la API RESTful.
 - **Docker:** Contenedorización de la aplicación.
 - **MongoDB:** Base de datos utilizada para almacenar la información de las cuentas bancarias y los usuarios.
+- **GitHub Actions:** Ejecutar unit test automáticamente en cada commit.
 
 
 ## Instrucciones de Uso
@@ -53,6 +54,12 @@ coverage html
 ```
 Esto generará la carpeta htmlcov, donde encontrarás el archivo index.html. Este archivo contiene información detallada sobre la cobertura de código (Ver imagen).
 
+## Ejecución de pruebas con GitHub Actions
+
+Este proyecto utiliza GitHub Actions para ejecutar pruebas automáticamente en cada commit. Las pruebas se definen en el archivo `ci.yml` en el directorio `.github/workflows`. GitHub Actions se encarga de ejecutar estas pruebas en un entorno de integración continua para garantizar la integridad del código.
+
+Puedes ver el estado de las pruebas en la pestaña "Actions" de este repositorio.
+
 ## Documentación del Código
 Cada método está documentado con un **docstring** que explica qué hace cada función. Además, se añadieron comentarios en secciones específicas del código para mejorar la comprensión y mantenibilidad.
 
@@ -72,7 +79,7 @@ La arquitectura utilizada en este proyecto sigue el patrón Modelo-Vista-Control
   
 La elección de la arquitectura MVC se realizó con el objetivo de seguir los principios SOLID, que promueven la modularidad, la extensibilidad y la facilidad de mantenimiento del código. La arquitectura MVC facilita la separación de responsabilidades y la organización del código en capas distintas, lo que mejora la legibilidad y la escalabilidad del proyecto.
 
-**Patro de diseño**
+**Patrones de desarrollo que se usarán**
 - **Pattern observer**
 
 En este proyecto, además de la arquitectura MVC, se implementara el patrón Observer para notificar a los usuarios sobre cambios en el saldo de sus cuentas bancarias. Este patrón permite una comunicación eficiente y desacoplada entre los objetos, asegurando que los usuarios sean informados sin que el componente que modifica el saldo necesite conocer los detalles de implementación de la notificación. Esto mejora la modularidad, la flexibilidad y la escalabilidad del sistema.
