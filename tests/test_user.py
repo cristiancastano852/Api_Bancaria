@@ -78,7 +78,6 @@ def test_update_user(test_client):
     created_users.append(created_user.id)
     created_user_id = created_user.id
 
-    # Actualizar los datos del usuario
     updated_user_data = {
         "id": created_user_id,
         "username": "updated_user",

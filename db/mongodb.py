@@ -3,7 +3,7 @@ from pymongo.server_api import ServerApi
 from dotenv import load_dotenv
 import os
 
-load_dotenv()  # Load environment variables
+load_dotenv()
 uri = os.getenv('MONGODB_URI')
 
 # Create a new client and connect to the server

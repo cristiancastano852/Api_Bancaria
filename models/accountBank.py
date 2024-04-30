@@ -8,6 +8,7 @@ class AccountType(str, Enum):
     ahorros = "Ahorros"
     corriente = "Corriente"
 
+
 class AccountBank(BaseModel):
     id: Optional[str]
     user_id: str
